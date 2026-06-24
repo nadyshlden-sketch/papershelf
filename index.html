@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PaperShelf</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Quicksand:wght@500;600;700&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="brand">
+        <img src="logo.png" alt="" class="brand-logo" />
+        <div>
+          <h1>PaperShelf</h1>
+          <p>Seminar paper outline</p>
+        </div>
+      </div>
+      <p class="status">Workspace</p>
+    </header>
+
+    <main class="app-shell">
+      <aside class="source-shelf" aria-labelledby="source-shelf-title">
+        <div class="section-heading">
+          <h2 id="source-shelf-title">Source Shelf</h2>
+          <span id="sourceCount">0 sources</span>
+        </div>
+
+        <div id="sourceList" class="source-list">
+          <p class="empty-state">No sources yet</p>
+        </div>
+
+        <div class="shelf-tools">
+          <details id="sourceTool" class="tool-panel" open>
+            <summary>New source</summary>
+            <form id="sourceForm" class="panel-form">
+              <label>
+                Author surname
+                <input id="sourceAuthor" name="author" autocomplete="off" required />
+              </label>
+              <label>
+                Year
+                <input id="sourceYear" name="year" inputmode="numeric" autocomplete="off" required />
+              </label>
+              <label>
+                Source title
+                <input id="sourceTitle" name="title" autocomplete="off" required />
+              </label>
+              <button type="submit">Add source</button>
+            </form>
+          </details>
+
+          <details id="quoteTool" class="tool-panel">
+            <summary>New quote</summary>
+            <form id="quoteForm" class="panel-form">
+              <label>
+                Source
+                <select id="quoteSource" name="sourceId" required>
+                  <option value="">Add a source first</option>
+                </select>
+              </label>
+              <label>
+                Page number
+                <input id="quotePage" name="page" autocomplete="off" required />
+              </label>
+              <label>
+                Quote text
+                <textarea id="quoteText" name="quote" rows="4" required></textarea>
+              </label>
+              <button type="submit">Add quote</button>
+            </form>
+          </details>
+        </div>
+      </aside>
+
+      <section class="workspace" aria-labelledby="workspace-title">
+        <div class="workspace-top">
+          <div>
+            <h2 id="workspace-title">Paper Outline</h2>
+            <p>Create section cards and connect each claim to one saved quote.</p>
+          </div>
+        </div>
+
+        <div id="board" class="board" aria-live="polite"></div>
+
+        <details id="cardComposer" class="card-drawer">
+          <summary>Add card</summary>
+          <form id="cardForm" class="card-composer">
+            <label>
+              Paper section
+              <select id="cardSection" name="section"></select>
+            </label>
+            <label>
+              Card header
+              <input id="cardHeader" name="header" autocomplete="off" required />
+            </label>
+            <label>
+              Supporting quote
+              <select id="cardQuote" name="quoteId" required>
+                <option value="">Add a quote first</option>
+              </select>
+            </label>
+            <label class="wide-field">
+              Claim
+              <textarea id="cardClaim" name="claim" rows="3" required></textarea>
+            </label>
+            <div id="quotePreview" class="quote-preview">Choose a quote to preview it here.</div>
+            <button type="submit">Add card</button>
+          </form>
+        </details>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
