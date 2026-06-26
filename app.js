@@ -24,6 +24,7 @@ const quotePreview = document.querySelector("#quotePreview");
 const cardComposer = document.querySelector("#cardComposer");
 const sourceTool = document.querySelector("#sourceTool");
 const quoteTool = document.querySelector("#quoteTool");
+const exportMarkdown = document.querySelector("#exportMarkdown");
 
 const makeId = () => {
   if (globalThis.crypto?.randomUUID) return globalThis.crypto.randomUUID();
@@ -191,6 +192,40 @@ const render = () => {
   renderQuotePreview();
 };
 
+const buildMarkdown = () => {
+  const lines = ["# PaperShelf Outline", ""];
+
+  sections.forEach((section) => {
+    const cards = state.cards.filter((card) => card.section === section);
+    lines.push(`## ${section}`, "");
+
+    if (!cards.length) {
+      lines.push("_No cards yet._", "");
+      return;
+    }
+
+    cards.forEach((card) => {
+      lines.push(`### ${card.header}`, "", card.claim, "");
+      lines.push(`> ${card.quoteText}`, "", card.citation, "");
+    });
+  });
+
+  return `${lines.join("\n").trim()}\n`;
+};
+
+const downloadMarkdown = () => {
+  const blob = new Blob([buildMarkdown()], { type: "text/markdown;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = "papershelf-outline.md";
+  document.body.append(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+};
+
 sourceForm.addEventListener("submit", (event) => {
   event.preventDefault();
   const formData = new FormData(sourceForm);
@@ -257,6 +292,7 @@ cardForm.addEventListener("submit", (event) => {
 });
 
 cardQuote.addEventListener("change", renderQuotePreview);
+exportMarkdown.addEventListener("click", downloadMarkdown);
 
 renderSectionSelect();
 render();
