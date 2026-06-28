@@ -7,23 +7,29 @@ const sections = [
 ];
 
 const storageKey = "papershelf-state";
+const layoutStorageKey = "papershelf-layout";
 
 const state = {
   sources: [],
   cards: [],
 };
 
+let sourceShelfCollapsed = false;
+
 const sourceForm = document.querySelector("#sourceForm");
 const quoteForm = document.querySelector("#quoteForm");
 const cardForm = document.querySelector("#cardForm");
 const sourceList = document.querySelector("#sourceList");
+const appShell = document.querySelector(".app-shell");
 const board = document.querySelector("#board");
 const sourceCount = document.querySelector("#sourceCount");
+const toggleSourceShelf = document.querySelector("#toggleSourceShelf");
 const quoteSource = document.querySelector("#quoteSource");
 const cardSection = document.querySelector("#cardSection");
 const cardQuote = document.querySelector("#cardQuote");
 const quotePreview = document.querySelector("#quotePreview");
 const cardComposer = document.querySelector("#cardComposer");
+const cardComposerSummary = cardComposer.querySelector("summary");
 const sourceTool = document.querySelector("#sourceTool");
 const quoteTool = document.querySelector("#quoteTool");
 const exportMarkdown = document.querySelector("#exportMarkdown");
@@ -38,14 +44,28 @@ const citationFor = (source, quote) => {
   return `(${source.author}, ${source.year}, p. ${quote.page})`;
 };
 
+const quoteLead = (text, wordCount = 4) => {
+  const words = text.trim().split(/\s+/).filter(Boolean);
+  const lead = words.slice(0, wordCount).join(" ");
+  return words.length > wordCount ? `${lead}...` : lead;
+};
+
 const loadState = () => {
   try {
     const saved = JSON.parse(localStorage.getItem(storageKey) || "{}");
     if (Array.isArray(saved.sources)) state.sources = saved.sources;
+    state.sources = state.sources.map((source) => ({
+      ...source,
+      collapsed:
+        typeof source.collapsed === "boolean"
+          ? source.collapsed
+          : Array.isArray(source.quotes) && source.quotes.length > 1,
+    }));
     if (Array.isArray(saved.cards)) {
       state.cards = saved.cards.map((card) => ({
         ...card,
         status: card.status === "done" ? "done" : "writing",
+        collapsed: card.collapsed === true,
       }));
     }
   } catch {
@@ -56,6 +76,19 @@ const loadState = () => {
 
 const saveState = () => {
   localStorage.setItem(storageKey, JSON.stringify(state));
+};
+
+const loadLayout = () => {
+  try {
+    const saved = JSON.parse(localStorage.getItem(layoutStorageKey) || "{}");
+    sourceShelfCollapsed = saved.sourceShelfCollapsed === true;
+  } catch {
+    sourceShelfCollapsed = false;
+  }
+};
+
+const saveLayout = () => {
+  localStorage.setItem(layoutStorageKey, JSON.stringify({ sourceShelfCollapsed }));
 };
 
 const allQuotes = () => {
@@ -106,7 +139,7 @@ const renderSourceSelects = () => {
     cardQuote,
     quotes,
     quotes.length ? "Choose a quote" : "Add a quote first",
-    (quote) => `${quote.source.author}, ${quote.source.year}, p. ${quote.page}`,
+    (quote) => `"${quoteLead(quote.text)}" - ${quote.source.author}, ${quote.source.year}, p. ${quote.page}`,
   );
 };
 
@@ -133,11 +166,24 @@ const renderSources = () => {
 
   sourceList.replaceChildren(
     ...state.sources.map((source) => {
-      const item = el("article", "source-item");
-      const title = el("div", "source-title");
-      title.append(
+      const item = el("details", "source-item");
+      item.open = !source.collapsed;
+      item.dataset.sourceId = source.id;
+
+      const title = el("summary", "source-title");
+      const titleText = el("div", "source-title-text");
+      const quoteCount = el(
+        "span",
+        "source-quote-count",
+        `${source.quotes.length} ${source.quotes.length === 1 ? "quote" : "quotes"}`,
+      );
+      titleText.append(
         el("strong", "", `${source.author}, ${source.year}`),
         el("span", "", source.title),
+      );
+      title.append(
+        titleText,
+        quoteCount,
       );
 
       const quoteList = el("ul", "quote-list");
@@ -157,6 +203,22 @@ const renderSources = () => {
   );
 };
 
+const renderLayout = () => {
+  appShell.classList.toggle("source-collapsed", sourceShelfCollapsed);
+  toggleSourceShelf.textContent = sourceShelfCollapsed ? ">" : "<";
+  toggleSourceShelf.setAttribute("aria-expanded", String(!sourceShelfCollapsed));
+  toggleSourceShelf.title = sourceShelfCollapsed ? "Expand source shelf" : "Collapse source shelf";
+};
+
+const renderCardComposerToggle = () => {
+  cardComposerSummary.textContent = cardComposer.open ? "X" : "Add card";
+  cardComposerSummary.setAttribute(
+    "aria-label",
+    cardComposer.open ? "Close card form" : "Add card",
+  );
+  cardComposerSummary.title = cardComposer.open ? "Close card form" : "Add card";
+};
+
 const renderBoard = () => {
   board.replaceChildren(
     ...sections.map((section, index) => {
@@ -173,11 +235,30 @@ const renderBoard = () => {
         cardList.append(
           ...cards.map((card) => {
             const status = card.status === "done" ? "done" : "writing";
-            const node = el("article", `paper-card status-${status}`);
+            const node = el(
+              "article",
+              `paper-card status-${status}${card.collapsed ? " card-collapsed" : ""}`,
+            );
             const titleRow = el("div", "card-title-row");
             const cardActions = el("div", "card-actions");
+            const collapseButton = el(
+              "button",
+              "card-collapse",
+              card.collapsed ? "+" : "-",
+            );
             const statusButton = el("button", "card-status-toggle", statusLabel(status));
-            const deleteButton = el("button", "card-delete", "Delete");
+            const deleteButton = el("button", "card-delete", "X");
+
+            collapseButton.type = "button";
+            collapseButton.dataset.cardId = card.id;
+            collapseButton.setAttribute(
+              "aria-expanded",
+              String(!card.collapsed),
+            );
+            collapseButton.setAttribute(
+              "aria-label",
+              `${card.collapsed ? "Expand" : "Collapse"} "${card.header}"`,
+            );
 
             statusButton.type = "button";
             statusButton.dataset.cardId = card.id;
@@ -192,7 +273,7 @@ const renderBoard = () => {
             deleteButton.dataset.cardId = card.id;
             deleteButton.setAttribute("aria-label", `Delete "${card.header}"`);
 
-            cardActions.append(statusButton, deleteButton);
+            cardActions.append(collapseButton, statusButton, deleteButton);
             titleRow.append(el("h4", "", card.header), cardActions);
             node.append(
               titleRow,
@@ -233,10 +314,12 @@ const renderQuotePreview = () => {
 
 const render = () => {
   saveState();
+  renderLayout();
   renderSourceSelects();
   renderSources();
   renderBoard();
   renderQuotePreview();
+  renderCardComposerToggle();
 };
 
 const buildMarkdown = () => {
@@ -283,6 +366,7 @@ sourceForm.addEventListener("submit", (event) => {
     author: formData.get("author").trim(),
     year: formData.get("year").trim(),
     title: formData.get("title").trim(),
+    collapsed: false,
     quotes: [],
   });
 
@@ -309,7 +393,32 @@ quoteForm.addEventListener("submit", (event) => {
   render();
 });
 
+sourceList.addEventListener(
+  "toggle",
+  (event) => {
+    const item = event.target.closest(".source-item");
+    if (!item) return;
+
+    const source = state.sources.find((entry) => entry.id === item.dataset.sourceId);
+    if (!source) return;
+
+    source.collapsed = !item.open;
+    saveState();
+  },
+  true,
+);
+
 board.addEventListener("click", (event) => {
+  const collapseButton = event.target.closest(".card-collapse");
+  if (collapseButton) {
+    const card = state.cards.find((item) => item.id === collapseButton.dataset.cardId);
+    if (!card) return;
+
+    card.collapsed = !card.collapsed;
+    render();
+    return;
+  }
+
   const deleteButton = event.target.closest(".card-delete");
   if (deleteButton) {
     state.cards = state.cards.filter((item) => item.id !== deleteButton.dataset.cardId);
@@ -350,6 +459,7 @@ cardForm.addEventListener("submit", (event) => {
     quoteText: quote.text,
     citation: quote.citation,
     status: "writing",
+    collapsed: false,
   });
 
   cardForm.reset();
@@ -358,6 +468,12 @@ cardForm.addEventListener("submit", (event) => {
 });
 
 cardQuote.addEventListener("change", renderQuotePreview);
+cardComposer.addEventListener("toggle", renderCardComposerToggle);
+toggleSourceShelf.addEventListener("click", () => {
+  sourceShelfCollapsed = !sourceShelfCollapsed;
+  saveLayout();
+  renderLayout();
+});
 exportMarkdown.addEventListener("click", downloadMarkdown);
 resetWorkspace.addEventListener("click", () => {
   const confirmed = confirm(
@@ -379,5 +495,6 @@ resetWorkspace.addEventListener("click", () => {
 });
 
 loadState();
+loadLayout();
 renderSectionSelect();
 render();

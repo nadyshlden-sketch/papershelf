@@ -22,7 +22,6 @@
         </div>
       </div>
       <div class="header-actions">
-        <p class="status">Workspace</p>
         <button id="resetWorkspace" class="reset-button" type="button">Start over</button>
         <button id="exportMarkdown" class="export-button" type="button">Export Markdown</button>
       </div>
@@ -31,8 +30,20 @@
     <main class="app-shell">
       <aside class="source-shelf" aria-labelledby="source-shelf-title">
         <div class="section-heading">
-          <h2 id="source-shelf-title">Source Shelf</h2>
-          <span id="sourceCount">0 sources</span>
+          <div class="section-heading-text">
+            <h2 id="source-shelf-title">Source Shelf</h2>
+            <button
+              id="toggleSourceShelf"
+              class="shelf-toggle"
+              type="button"
+              aria-controls="sourceList sourceTool quoteTool"
+              aria-expanded="true"
+              title="Collapse source shelf"
+            >
+              &lt;
+            </button>
+            <span id="sourceCount">0 sources</span>
+          </div>
         </div>
 
         <div id="sourceList" class="source-list">
