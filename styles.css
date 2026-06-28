@@ -127,9 +127,9 @@ label {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
-  height: 88px;
-  padding: 14px 32px;
+  gap: 18px;
+  height: 72px;
+  padding: 10px 28px;
   border-bottom: 1px solid var(--cobalt);
   background: rgba(250, 249, 245, 0.86);
 }
@@ -137,22 +137,22 @@ label {
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   flex: 0 0 auto;
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   min-width: 0;
 }
 
 .brand-logo {
-  width: 58px;
-  height: 58px;
+  width: 48px;
+  height: 48px;
   object-fit: contain;
-  padding: 5px;
+  padding: 4px;
   border: 1px solid var(--cobalt);
   border-radius: 4px;
   background: var(--bg-card);
@@ -172,7 +172,7 @@ label {
 .brand h1 {
   color: var(--cobalt-dark);
   font-family: var(--font-heading);
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(1.45rem, 2.4vw, 1.8rem);
   font-weight: 800;
   letter-spacing: 0;
   line-height: 1;
@@ -183,7 +183,7 @@ label {
 .workspace-top p {
   color: var(--text-secondary);
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.66rem;
   font-weight: 500;
   letter-spacing: 0.05em;
   line-height: 1.2;
@@ -198,7 +198,7 @@ label {
   background: var(--cobalt-tint);
   color: var(--cobalt-dark);
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.66rem;
   font-weight: 700;
   letter-spacing: 0.05em;
   line-height: 1.2;
@@ -206,12 +206,27 @@ label {
 }
 
 .status {
-  padding: 9px 14px;
+  padding: 7px 11px;
 }
 
 .export-button {
-  min-height: 42px;
+  min-height: 36px;
   background: var(--yellow);
+  color: var(--ink);
+}
+
+.reset-button {
+  min-height: 36px;
+  border-color: var(--outline);
+  background: transparent;
+  box-shadow: none;
+  color: var(--text-secondary);
+}
+
+.reset-button:hover {
+  border-color: var(--ink);
+  background: var(--bg-card);
+  box-shadow: var(--print-offset);
   color: var(--ink);
 }
 
@@ -230,7 +245,7 @@ label {
   z-index: 1;
   display: grid;
   grid-template-columns: minmax(280px, 320px) minmax(0, 1fr);
-  height: calc(100vh - 88px);
+  height: calc(100vh - 72px);
 }
 
 .source-shelf {
@@ -250,11 +265,11 @@ label {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 14px;
   min-width: 0;
   min-height: 0;
   overflow: hidden;
-  padding: 28px 32px;
+  padding: 24px 28px;
   background:
     radial-gradient(ellipse 46% 30% at 76% 82%, rgba(0, 71, 255, 0.2), transparent 64%),
     radial-gradient(ellipse 36% 22% at 48% 18%, rgba(0, 71, 255, 0.07), transparent 64%);
@@ -263,7 +278,7 @@ label {
 .workspace::before {
   content: "";
   position: absolute;
-  inset: 86px 32px 112px;
+  inset: 78px 28px 112px;
   pointer-events: none;
   background:
     repeating-linear-gradient(
@@ -297,7 +312,7 @@ label {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px;
 }
 
 .workspace-top {
@@ -310,10 +325,14 @@ label {
 .workspace-top h2 {
   color: var(--cobalt-dark);
   font-family: var(--font-heading);
-  font-size: clamp(1.45rem, 3vw, 2rem);
+  font-size: 1.12rem;
   font-weight: 800;
   letter-spacing: 0;
-  line-height: 1.1;
+  line-height: 1.15;
+}
+
+.workspace-top p {
+  max-width: 44rem;
 }
 
 .section-heading span {
@@ -510,38 +529,39 @@ label {
   flex: 1 1 auto;
   display: grid;
   grid-template-columns: repeat(5, minmax(190px, 1fr));
-  gap: 24px;
+  gap: 18px;
   min-height: 0;
   overflow: auto;
-  padding: 6px 6px 96px;
+  padding: 10px 4px 96px;
 }
 
 .section-column {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 14px;
   min-width: 0;
   min-height: 100%;
 }
 
 .section-column header {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: 2.45em auto;
+  align-content: start;
   gap: 8px;
-  height: 82px;
+  height: 80px;
   justify-content: flex-start;
   border-top: 2px solid var(--cobalt);
-  padding-top: 10px;
+  padding-top: 8px;
 }
 
 .section-column h3 {
   margin: 0;
   color: var(--cobalt-dark);
   font-family: var(--font-heading);
-  font-size: clamp(0.86rem, 1.04vw, 1.08rem);
+  font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0;
-  line-height: 1.05;
+  line-height: 1.16;
   max-width: 100%;
   overflow-wrap: break-word;
   text-transform: uppercase;
@@ -552,10 +572,10 @@ label {
   border: 1px solid currentColor;
   border-radius: 999px;
   font-family: var(--font-mono);
-  font-size: 0.62rem;
+  font-size: 0.58rem;
   font-weight: 500;
   letter-spacing: 0.05em;
-  padding: 5px 8px;
+  padding: 4px 7px;
   text-transform: uppercase;
   white-space: nowrap;
 }
@@ -602,11 +622,11 @@ label {
 
 .card-list {
   display: grid;
-  gap: 18px;
+  gap: 14px;
 }
 
 .add-card-control {
-  min-height: 88px;
+  min-height: 72px;
   border: 2px dashed rgba(0, 71, 255, 0.38);
   background: rgba(255, 255, 255, 0.48);
   box-shadow: none;
@@ -622,13 +642,23 @@ label {
 .paper-card {
   position: relative;
   display: grid;
-  gap: 18px;
-  min-height: 260px;
+  gap: 14px;
+  min-height: 220px;
   border: 2px solid var(--cobalt);
   border-radius: 0;
   background: var(--bg-card);
   box-shadow: var(--print-offset-strong);
-  padding: 30px 30px 24px;
+  padding: 24px 24px 20px;
+}
+
+.paper-card.status-writing {
+  --status-bg: var(--writing-bg);
+  --status-text: var(--writing-text);
+}
+
+.paper-card.status-done {
+  --status-bg: var(--done-bg);
+  --status-text: var(--done-text);
 }
 
 .paper-card:hover {
@@ -639,48 +669,95 @@ label {
 .paper-card::before {
   content: "";
   position: absolute;
-  top: 16px;
-  right: 26px;
-  width: 26px;
+  top: 14px;
+  right: 22px;
+  width: 22px;
   height: 5px;
   border-radius: 999px;
   background: #9aa9bd;
   transform: rotate(-14deg);
 }
 
-.paper-card h4 {
+.card-title-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
+}
+
+.card-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.paper-card h4 {
+  min-width: 0;
   margin: 0;
   color: var(--ink);
   font-family: var(--font-mono);
-  font-size: 1rem;
+  font-size: 0.86rem;
   font-weight: 700;
   letter-spacing: 0.05em;
-  line-height: 1.55;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
   text-transform: uppercase;
 }
 
-.paper-card h4::after {
-  content: "Writing";
+.card-status-toggle {
   flex: 0 0 auto;
   border: 1px solid var(--status-text);
   border-radius: 13px 11px 14px 10px;
   background: var(--status-bg);
   color: var(--status-text);
-  font-size: 0.64rem;
+  box-shadow: none;
+  min-height: 0;
+  font-size: 0.58rem;
   font-weight: 500;
-  padding: 4px 7px;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+  padding: 4px 6px;
   text-transform: uppercase;
+}
+
+.card-delete {
+  flex: 0 0 auto;
+  min-height: 0;
+  border-color: #f0b4a6;
+  background: #fff1ed;
+  box-shadow: none;
+  color: #8d1c00;
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+  padding: 4px 6px;
+}
+
+.card-status-toggle:hover {
+  box-shadow: none;
+  filter: brightness(0.98);
+  transform: none;
+}
+
+.card-delete:hover {
+  background: #ffdad2;
+  box-shadow: none;
+  transform: none;
+}
+
+.card-status-toggle:active,
+.card-delete:active {
+  box-shadow: none;
+  transform: none;
 }
 
 .claim {
   margin: 0;
   color: var(--ink);
   font-family: var(--font-body);
-  font-size: 1.35rem;
+  font-size: 1.12rem;
   font-style: italic;
   font-weight: 400;
   line-height: 1.55;
@@ -693,7 +770,7 @@ blockquote {
   background: rgba(235, 239, 255, 0.54);
   color: var(--text-secondary);
   font-family: var(--font-body);
-  font-size: 1rem;
+  font-size: 0.92rem;
   font-style: italic;
   line-height: 1.5;
   padding: 10px 12px;
@@ -706,7 +783,7 @@ blockquote {
   background: var(--cobalt-tint);
   color: var(--cobalt-dark);
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.66rem;
   font-weight: 500;
   padding: 8px 11px;
 }
@@ -756,7 +833,7 @@ blockquote {
   }
 
   .workspace::before {
-    inset: 86px 24px 112px;
+    inset: 78px 24px 112px;
   }
 }
 
@@ -765,7 +842,7 @@ blockquote {
     height: auto;
     align-items: flex-start;
     flex-direction: column;
-    padding: 16px;
+    padding: 14px 16px;
   }
 
   .header-actions {
@@ -779,12 +856,12 @@ blockquote {
   }
 
   .brand-logo {
-    width: 52px;
-    height: 52px;
+    width: 44px;
+    height: 44px;
   }
 
   .brand h1 {
-    font-size: 2rem;
+    font-size: 1.6rem;
   }
 
   .source-shelf,

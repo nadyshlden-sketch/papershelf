@@ -6,6 +6,8 @@ const sections = [
   "Conclusion",
 ];
 
+const storageKey = "papershelf-state";
+
 const state = {
   sources: [],
   cards: [],
@@ -25,6 +27,7 @@ const cardComposer = document.querySelector("#cardComposer");
 const sourceTool = document.querySelector("#sourceTool");
 const quoteTool = document.querySelector("#quoteTool");
 const exportMarkdown = document.querySelector("#exportMarkdown");
+const resetWorkspace = document.querySelector("#resetWorkspace");
 
 const makeId = () => {
   if (globalThis.crypto?.randomUUID) return globalThis.crypto.randomUUID();
@@ -33,6 +36,26 @@ const makeId = () => {
 
 const citationFor = (source, quote) => {
   return `(${source.author}, ${source.year}, p. ${quote.page})`;
+};
+
+const loadState = () => {
+  try {
+    const saved = JSON.parse(localStorage.getItem(storageKey) || "{}");
+    if (Array.isArray(saved.sources)) state.sources = saved.sources;
+    if (Array.isArray(saved.cards)) {
+      state.cards = saved.cards.map((card) => ({
+        ...card,
+        status: card.status === "done" ? "done" : "writing",
+      }));
+    }
+  } catch {
+    state.sources = [];
+    state.cards = [];
+  }
+};
+
+const saveState = () => {
+  localStorage.setItem(storageKey, JSON.stringify(state));
 };
 
 const allQuotes = () => {
@@ -44,6 +67,8 @@ const allQuotes = () => {
     })),
   );
 };
+
+const statusLabel = (status) => (status === "done" ? "Done" : "Writing");
 
 const el = (tag, className, text) => {
   const node = document.createElement(tag);
@@ -147,9 +172,30 @@ const renderBoard = () => {
       if (cards.length) {
         cardList.append(
           ...cards.map((card) => {
-            const node = el("article", "paper-card");
+            const status = card.status === "done" ? "done" : "writing";
+            const node = el("article", `paper-card status-${status}`);
+            const titleRow = el("div", "card-title-row");
+            const cardActions = el("div", "card-actions");
+            const statusButton = el("button", "card-status-toggle", statusLabel(status));
+            const deleteButton = el("button", "card-delete", "Delete");
+
+            statusButton.type = "button";
+            statusButton.dataset.cardId = card.id;
+            statusButton.dataset.status = status;
+            statusButton.setAttribute("aria-pressed", String(status === "done"));
+            statusButton.setAttribute(
+              "aria-label",
+              `Mark "${card.header}" as ${status === "done" ? "writing" : "done"}`,
+            );
+
+            deleteButton.type = "button";
+            deleteButton.dataset.cardId = card.id;
+            deleteButton.setAttribute("aria-label", `Delete "${card.header}"`);
+
+            cardActions.append(statusButton, deleteButton);
+            titleRow.append(el("h4", "", card.header), cardActions);
             node.append(
-              el("h4", "", card.header),
+              titleRow,
               el("p", "claim", card.claim),
               el("blockquote", "", card.quoteText),
               el("div", "citation", card.citation),
@@ -186,6 +232,7 @@ const renderQuotePreview = () => {
 };
 
 const render = () => {
+  saveState();
   renderSourceSelects();
   renderSources();
   renderBoard();
@@ -206,6 +253,7 @@ const buildMarkdown = () => {
 
     cards.forEach((card) => {
       lines.push(`### ${card.header}`, "", card.claim, "");
+      lines.push(`Status: ${statusLabel(card.status)}`, "");
       lines.push(`> ${card.quoteText}`, "", card.citation, "");
     });
   });
@@ -262,6 +310,23 @@ quoteForm.addEventListener("submit", (event) => {
 });
 
 board.addEventListener("click", (event) => {
+  const deleteButton = event.target.closest(".card-delete");
+  if (deleteButton) {
+    state.cards = state.cards.filter((item) => item.id !== deleteButton.dataset.cardId);
+    render();
+    return;
+  }
+
+  const statusButton = event.target.closest(".card-status-toggle");
+  if (statusButton) {
+    const card = state.cards.find((item) => item.id === statusButton.dataset.cardId);
+    if (!card) return;
+
+    card.status = card.status === "done" ? "writing" : "done";
+    render();
+    return;
+  }
+
   const button = event.target.closest(".add-card-control");
   if (!button) return;
 
@@ -284,6 +349,7 @@ cardForm.addEventListener("submit", (event) => {
     claim: formData.get("claim").trim(),
     quoteText: quote.text,
     citation: quote.citation,
+    status: "writing",
   });
 
   cardForm.reset();
@@ -293,6 +359,25 @@ cardForm.addEventListener("submit", (event) => {
 
 cardQuote.addEventListener("change", renderQuotePreview);
 exportMarkdown.addEventListener("click", downloadMarkdown);
+resetWorkspace.addEventListener("click", () => {
+  const confirmed = confirm(
+    "Start over and delete all cards, sources, and saved quotes? This cannot be undone.",
+  );
 
+  if (!confirmed) return;
+
+  state.sources = [];
+  state.cards = [];
+  sourceForm.reset();
+  quoteForm.reset();
+  cardForm.reset();
+  cardComposer.open = false;
+  sourceTool.open = true;
+  quoteTool.open = false;
+  localStorage.removeItem(storageKey);
+  render();
+});
+
+loadState();
 renderSectionSelect();
 render();
