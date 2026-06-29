@@ -241,7 +241,7 @@ label {
   flex-direction: column;
   gap: 16px;
   min-height: 0;
-  overflow: auto;
+  overflow: hidden;
   padding: 20px 10px 16px 14px;
   border-right: 1px solid var(--cobalt);
   background:
@@ -425,14 +425,14 @@ label {
 }
 
 .source-list {
-  flex: 0 0 auto;
+  flex: 1 1 auto;
   display: grid;
   align-content: start;
   gap: 10px;
   max-height: none;
   min-height: 0;
-  overflow: visible;
-  padding: 2px 0;
+  overflow: auto;
+  padding: 2px 5px 2px 0;
 }
 
 .source-item {
@@ -596,15 +596,8 @@ label {
   flex: 0 0 auto;
   display: grid;
   gap: 12px;
-  position: sticky;
-  bottom: 0;
-  z-index: 4;
-  margin: 0 -10px -16px -14px;
-  padding: 12px 10px 16px 14px;
-  background:
-    linear-gradient(rgba(243, 241, 236, 0), var(--bg-drawer) 14px),
-    radial-gradient(rgba(22, 27, 42, 0.08) 0.55px, transparent 0.55px) 0 0 / 6px 6px,
-    var(--bg-drawer);
+  min-height: 0;
+  padding-top: 0;
 }
 
 .tool-panel,
@@ -1105,6 +1098,7 @@ blockquote {
   }
 
   .source-shelf {
+    max-height: min(760px, calc(100vh - 64px));
     border-right: 0;
     border-bottom: 1px solid var(--cobalt);
   }
@@ -1112,7 +1106,7 @@ blockquote {
   .source-collapsed .source-shelf {
     align-items: stretch;
     gap: 16px;
-    overflow: auto;
+    overflow: hidden;
     padding: 20px 16px 16px;
   }
 
@@ -1191,7 +1185,7 @@ blockquote {
   }
 
   .source-shelf {
-    max-height: none;
+    max-height: calc(100vh - 115px);
     gap: 14px;
   }
 
@@ -1214,8 +1208,8 @@ blockquote {
 
   .source-list {
     max-height: none;
-    overflow: visible;
-    padding-right: 0;
+    overflow: auto;
+    padding-right: 5px;
   }
 
   .source-title {
@@ -1242,8 +1236,8 @@ blockquote {
   }
 
   .shelf-tools {
-    margin: 0 -14px -18px;
-    padding: 12px 14px 18px;
+    margin: 0;
+    padding: 0;
   }
 
   .panel-form {
