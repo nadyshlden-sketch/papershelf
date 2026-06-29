@@ -7,7 +7,6 @@ const sections = [
 ];
 
 const storageKey = "papershelf-state";
-const layoutStorageKey = "papershelf-layout";
 
 const state = {
   sources: [],
@@ -79,16 +78,7 @@ const saveState = () => {
 };
 
 const loadLayout = () => {
-  try {
-    const saved = JSON.parse(localStorage.getItem(layoutStorageKey) || "{}");
-    sourceShelfCollapsed = saved.sourceShelfCollapsed === true;
-  } catch {
-    sourceShelfCollapsed = false;
-  }
-};
-
-const saveLayout = () => {
-  localStorage.setItem(layoutStorageKey, JSON.stringify({ sourceShelfCollapsed }));
+  sourceShelfCollapsed = false;
 };
 
 const allQuotes = () => {
@@ -124,6 +114,36 @@ const fillSelect = (select, items, placeholder, getLabel) => {
     option.textContent = getLabel(item);
     select.append(option);
   });
+};
+
+const copyText = async (text) => {
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  textArea.setAttribute("readonly", "");
+  textArea.style.position = "fixed";
+  textArea.style.left = "-9999px";
+  textArea.style.top = "0";
+  document.body.append(textArea);
+  textArea.focus();
+  textArea.select();
+
+  try {
+    if (document.execCommand("copy")) return;
+  } finally {
+    textArea.remove();
+  }
+
+  if (navigator.clipboard?.writeText) {
+    await Promise.race([
+      navigator.clipboard.writeText(text),
+      new Promise((_, reject) => {
+        window.setTimeout(() => reject(new Error("Clipboard write timed out")), 800);
+      }),
+    ]);
+    return;
+  }
+
+  throw new Error("Clipboard is unavailable");
 };
 
 const renderSourceSelects = () => {
@@ -205,9 +225,10 @@ const renderSources = () => {
 
 const renderLayout = () => {
   appShell.classList.toggle("source-collapsed", sourceShelfCollapsed);
-  toggleSourceShelf.textContent = sourceShelfCollapsed ? ">" : "<";
   toggleSourceShelf.setAttribute("aria-expanded", String(!sourceShelfCollapsed));
-  toggleSourceShelf.title = sourceShelfCollapsed ? "Expand source shelf" : "Collapse source shelf";
+  const shelfAction = sourceShelfCollapsed ? "Expand source shelf" : "Collapse source shelf";
+  toggleSourceShelf.setAttribute("aria-label", shelfAction);
+  toggleSourceShelf.title = shelfAction;
 };
 
 const renderCardComposerToggle = () => {
@@ -239,26 +260,15 @@ const renderBoard = () => {
               "article",
               `paper-card status-${status}${card.collapsed ? " card-collapsed" : ""}`,
             );
+            node.dataset.cardId = card.id;
+            node.setAttribute("aria-expanded", String(!card.collapsed));
+            node.setAttribute("title", `${card.collapsed ? "Expand" : "Collapse"} card`);
             const titleRow = el("div", "card-title-row");
             const cardActions = el("div", "card-actions");
-            const collapseButton = el(
-              "button",
-              "card-collapse",
-              card.collapsed ? "+" : "-",
-            );
             const statusButton = el("button", "card-status-toggle", statusLabel(status));
+            const quoteRow = el("div", "card-quote-row");
+            const copyButton = el("button", "card-copy", "copy");
             const deleteButton = el("button", "card-delete", "X");
-
-            collapseButton.type = "button";
-            collapseButton.dataset.cardId = card.id;
-            collapseButton.setAttribute(
-              "aria-expanded",
-              String(!card.collapsed),
-            );
-            collapseButton.setAttribute(
-              "aria-label",
-              `${card.collapsed ? "Expand" : "Collapse"} "${card.header}"`,
-            );
 
             statusButton.type = "button";
             statusButton.dataset.cardId = card.id;
@@ -269,16 +279,22 @@ const renderBoard = () => {
               `Mark "${card.header}" as ${status === "done" ? "writing" : "done"}`,
             );
 
+            copyButton.type = "button";
+            copyButton.dataset.cardId = card.id;
+            copyButton.title = "Copy quote";
+            copyButton.setAttribute("aria-label", `Copy quote from "${card.header}"`);
+
             deleteButton.type = "button";
             deleteButton.dataset.cardId = card.id;
             deleteButton.setAttribute("aria-label", `Delete "${card.header}"`);
 
-            cardActions.append(collapseButton, statusButton, deleteButton);
+            cardActions.append(statusButton, deleteButton);
+            quoteRow.append(el("blockquote", "", card.quoteText), copyButton);
             titleRow.append(el("h4", "", card.header), cardActions);
             node.append(
               titleRow,
               el("p", "claim", card.claim),
-              el("blockquote", "", card.quoteText),
+              quoteRow,
               el("div", "citation", card.citation),
             );
             return node;
@@ -408,14 +424,26 @@ sourceList.addEventListener(
   true,
 );
 
-board.addEventListener("click", (event) => {
-  const collapseButton = event.target.closest(".card-collapse");
-  if (collapseButton) {
-    const card = state.cards.find((item) => item.id === collapseButton.dataset.cardId);
+board.addEventListener("click", async (event) => {
+  const copyButton = event.target.closest(".card-copy");
+  if (copyButton) {
+    const card = state.cards.find((item) => item.id === copyButton.dataset.cardId);
     if (!card) return;
 
-    card.collapsed = !card.collapsed;
-    render();
+    const originalLabel = copyButton.getAttribute("aria-label");
+    const originalTitle = copyButton.title;
+    try {
+      await copyText(card.quoteText);
+      copyButton.setAttribute("aria-label", `Copied quote from "${card.header}"`);
+      copyButton.title = "Copied";
+    } catch {
+      copyButton.setAttribute("aria-label", `Could not copy quote from "${card.header}"`);
+      copyButton.title = "Copy failed";
+    }
+    window.setTimeout(() => {
+      copyButton.setAttribute("aria-label", originalLabel);
+      copyButton.title = originalTitle;
+    }, 1200);
     return;
   }
 
@@ -432,6 +460,16 @@ board.addEventListener("click", (event) => {
     if (!card) return;
 
     card.status = card.status === "done" ? "writing" : "done";
+    render();
+    return;
+  }
+
+  const cardNode = event.target.closest(".paper-card");
+  if (cardNode) {
+    const card = state.cards.find((item) => item.id === cardNode.dataset.cardId);
+    if (!card) return;
+
+    card.collapsed = !card.collapsed;
     render();
     return;
   }
@@ -471,7 +509,6 @@ cardQuote.addEventListener("change", renderQuotePreview);
 cardComposer.addEventListener("toggle", renderCardComposerToggle);
 toggleSourceShelf.addEventListener("click", () => {
   sourceShelfCollapsed = !sourceShelfCollapsed;
-  saveLayout();
   renderLayout();
 });
 exportMarkdown.addEventListener("click", downloadMarkdown);
@@ -488,7 +525,7 @@ resetWorkspace.addEventListener("click", () => {
   quoteForm.reset();
   cardForm.reset();
   cardComposer.open = false;
-  sourceTool.open = true;
+  sourceTool.open = false;
   quoteTool.open = false;
   localStorage.removeItem(storageKey);
   render();

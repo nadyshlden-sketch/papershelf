@@ -32,17 +32,16 @@
         <div class="section-heading">
           <div class="section-heading-text">
             <h2 id="source-shelf-title">Source Shelf</h2>
+            <span id="sourceCount">0 sources</span>
             <button
               id="toggleSourceShelf"
               class="shelf-toggle"
               type="button"
               aria-controls="sourceList sourceTool quoteTool"
               aria-expanded="true"
+              aria-label="Collapse source shelf"
               title="Collapse source shelf"
-            >
-              &lt;
-            </button>
-            <span id="sourceCount">0 sources</span>
+            ></button>
           </div>
         </div>
 
@@ -51,7 +50,7 @@
         </div>
 
         <div class="shelf-tools">
-          <details id="sourceTool" class="tool-panel" open>
+          <details id="sourceTool" class="tool-panel">
             <summary>New source</summary>
             <form id="sourceForm" class="panel-form">
               <label>
