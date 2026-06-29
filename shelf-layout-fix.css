@@ -50,6 +50,21 @@
   max-width: 100%;
 }
 
+.card-quote-row,
+blockquote {
+  max-width: 100%;
+  min-width: 0;
+}
+
+.card-quote-row {
+  width: 100%;
+}
+
+blockquote {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
 .source-title-text strong,
 .source-title-text span {
   max-width: 100%;
