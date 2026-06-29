@@ -465,7 +465,7 @@ label {
 }
 
 .source-title::before {
-  content: "⌄";
+  content: "âŒ„";
   display: block;
   width: 18px;
   margin: 0;
@@ -483,7 +483,7 @@ label {
 }
 
 .source-item[open] .source-title::before {
-  content: "⌃";
+  content: "âŒƒ";
 }
 
 .source-title::before {
@@ -596,7 +596,15 @@ label {
   flex: 0 0 auto;
   display: grid;
   gap: 12px;
-  padding-top: 0;
+  position: sticky;
+  bottom: 0;
+  z-index: 4;
+  margin: 0 -10px -16px -14px;
+  padding: 12px 10px 16px 14px;
+  background:
+    linear-gradient(rgba(243, 241, 236, 0), var(--bg-drawer) 14px),
+    radial-gradient(rgba(22, 27, 42, 0.08) 0.55px, transparent 0.55px) 0 0 / 6px 6px,
+    var(--bg-drawer);
 }
 
 .tool-panel,
@@ -1231,6 +1239,11 @@ blockquote {
   .card-drawer summary {
     width: 100%;
     text-align: center;
+  }
+
+  .shelf-tools {
+    margin: 0 -14px -18px;
+    padding: 12px 14px 18px;
   }
 
   .panel-form {
