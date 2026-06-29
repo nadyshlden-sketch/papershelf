@@ -30,6 +30,26 @@
   width: 100%;
 }
 
+.board {
+  --board-column-width: 312px;
+  grid-auto-columns: var(--board-column-width);
+  justify-content: start;
+}
+
+.section-column {
+  width: var(--board-column-width);
+  min-width: var(--board-column-width);
+  max-width: var(--board-column-width);
+}
+
+.card-list,
+.paper-card,
+.add-card-control {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
 .source-title-text strong,
 .source-title-text span {
   max-width: 100%;
@@ -73,5 +93,9 @@
 
   .shelf-tools {
     width: calc(100% - 26px);
+  }
+
+  .board {
+    --board-column-width: calc(100vw - 42px);
   }
 }
