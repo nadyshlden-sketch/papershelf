@@ -9,12 +9,25 @@
   overflow-x: hidden;
   overflow-y: auto;
   padding-right: 12px;
+  scrollbar-gutter: stable;
 }
 
-.source-item {
+.source-item,
+.tool-panel {
   justify-self: start;
   width: calc(100% - 12px);
   max-width: 100%;
+  min-width: 0;
+}
+
+.shelf-tools {
+  width: calc(100% - 32px);
+  max-width: 100%;
+  min-width: 0;
+}
+
+.tool-panel {
+  width: 100%;
 }
 
 .source-title-text strong,
@@ -42,7 +55,12 @@
     padding-right: 8px;
   }
 
-  .source-item {
+  .source-item,
+  .tool-panel {
     width: calc(100% - 10px);
+  }
+
+  .shelf-tools {
+    width: calc(100% - 26px);
   }
 }
