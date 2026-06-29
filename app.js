@@ -19,6 +19,7 @@ const sourceForm = document.querySelector("#sourceForm");
 const quoteForm = document.querySelector("#quoteForm");
 const cardForm = document.querySelector("#cardForm");
 const sourceList = document.querySelector("#sourceList");
+const sourceShelf = document.querySelector(".source-shelf");
 const appShell = document.querySelector(".app-shell");
 const board = document.querySelector("#board");
 const sourceCount = document.querySelector("#sourceCount");
@@ -240,6 +241,33 @@ const renderCardComposerToggle = () => {
   cardComposerSummary.title = cardComposer.open ? "Close card form" : "Add card";
 };
 
+const revealShelfTool = (tool) => {
+  if (!tool.open) return;
+
+  window.requestAnimationFrame(() => {
+    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? "auto"
+      : "smooth";
+    const shelfCanScroll = sourceShelf.scrollHeight > sourceShelf.clientHeight + 1;
+
+    if (shelfCanScroll) {
+      const shelfRect = sourceShelf.getBoundingClientRect();
+      const toolRect = tool.getBoundingClientRect();
+      sourceShelf.scrollTo({
+        top: Math.max(0, sourceShelf.scrollTop + toolRect.top - shelfRect.top - 12),
+        behavior,
+      });
+      return;
+    }
+
+    const headerHeight = document.querySelector(".app-header")?.getBoundingClientRect().height ?? 0;
+    window.scrollTo({
+      top: Math.max(0, window.scrollY + tool.getBoundingClientRect().top - headerHeight - 12),
+      behavior,
+    });
+  });
+};
+
 const renderBoard = () => {
   board.replaceChildren(
     ...sections.map((section, index) => {
@@ -390,6 +418,7 @@ sourceForm.addEventListener("submit", (event) => {
   sourceTool.open = false;
   quoteTool.open = true;
   render();
+  revealShelfTool(quoteTool);
 });
 
 quoteForm.addEventListener("submit", (event) => {
@@ -507,6 +536,8 @@ cardForm.addEventListener("submit", (event) => {
 
 cardQuote.addEventListener("change", renderQuotePreview);
 cardComposer.addEventListener("toggle", renderCardComposerToggle);
+sourceTool.addEventListener("toggle", () => revealShelfTool(sourceTool));
+quoteTool.addEventListener("toggle", () => revealShelfTool(quoteTool));
 toggleSourceShelf.addEventListener("click", () => {
   sourceShelfCollapsed = !sourceShelfCollapsed;
   renderLayout();
