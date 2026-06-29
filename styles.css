@@ -1234,8 +1234,8 @@ blockquote {
   }
 
   .source-shelf {
-    height: calc(100vh - 115px);
-    max-height: calc(100vh - 115px);
+    height: min(440px, calc(100vh - 115px));
+    max-height: min(440px, calc(100vh - 115px));
     gap: 14px;
   }
 
