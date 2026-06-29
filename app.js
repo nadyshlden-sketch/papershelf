@@ -434,7 +434,9 @@ quoteForm.addEventListener("submit", (event) => {
     text: formData.get("quote").trim(),
   });
 
+  source.collapsed = false;
   quoteForm.reset();
+  quoteTool.open = false;
   render();
 });
 
