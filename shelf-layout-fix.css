@@ -36,6 +36,17 @@
   white-space: normal;
 }
 
+.quote-list {
+  min-width: 0;
+}
+
+.quote-line {
+  max-width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
 @media (max-width: 1080px) {
   .source-shelf {
     height: min(760px, calc(100vh - 64px));
