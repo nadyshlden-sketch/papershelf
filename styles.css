@@ -335,6 +335,7 @@ label {
   position: relative;
   z-index: 1;
   flex: 0 0 auto;
+  padding: 0 24px;
 }
 
 .shelf-toggle {
@@ -756,7 +757,7 @@ label {
   justify-content: start;
   min-height: 0;
   overflow: auto;
-  padding: 8px 24px 0 0;
+  padding: 8px 24px 0;
 }
 
 .section-column {
@@ -1312,6 +1313,7 @@ blockquote {
 
   .workspace-top {
     display: block;
+    padding: 0 14px;
   }
 
   .workspace-top h2,
@@ -1373,7 +1375,7 @@ blockquote {
     grid-auto-flow: column;
     gap: 14px;
     margin-inline: 0;
-    padding: 6px 14px 0 0;
+    padding: 6px 14px 0;
     scroll-snap-type: x mandatory;
   }
 
