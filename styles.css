@@ -791,10 +791,10 @@ label {
 
 .section-column header {
   display: grid;
-  grid-template-rows: 2.2em auto;
+  grid-template-rows: 2.35em 24px;
   align-content: start;
-  gap: 6px;
-  height: 68px;
+  gap: 7px;
+  height: 74px;
   justify-content: flex-start;
   border-top: 2px solid var(--cobalt);
   padding-top: 8px;
@@ -1419,11 +1419,14 @@ blockquote {
   }
 
   .section-column {
+    gap: 18px;
     scroll-snap-align: start;
   }
 
   .section-column header {
-    height: 62px;
+    grid-template-rows: 2.45em 24px;
+    gap: 8px;
+    height: 78px;
   }
 
   .paper-card {
