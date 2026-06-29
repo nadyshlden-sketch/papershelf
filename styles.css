@@ -1234,14 +1234,14 @@ blockquote {
   }
 
   .source-shelf {
-    height: min(440px, calc(100vh - 115px));
-    max-height: min(440px, calc(100vh - 115px));
-    gap: 14px;
+    height: min(320px, calc(100vh - 115px));
+    max-height: min(320px, calc(100vh - 115px));
+    gap: 10px;
   }
 
   .section-heading-text {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-columns: minmax(0, 1fr) auto;
     gap: 8px;
   }
 
@@ -1252,8 +1252,7 @@ blockquote {
   }
 
   .shelf-toggle {
-    width: 34px;
-    min-height: 34px;
+    display: none;
   }
 
   .source-list {
@@ -1296,8 +1295,24 @@ blockquote {
   }
 
   .shelf-tools {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
     margin: 0;
     padding: 0;
+  }
+
+  .tool-panel[open] {
+    grid-column: 1 / -1;
+  }
+
+  .tool-panel:not([open]) {
+    min-height: 42px;
+  }
+
+  .tool-panel summary {
+    min-height: 42px;
+    padding: 8px 6px;
+    font-size: 0.62rem;
   }
 
   .panel-form {
@@ -1343,6 +1358,10 @@ blockquote {
     right: 14px;
     bottom: 14px;
     z-index: 10;
+  }
+
+  .card-drawer:not([open]) {
+    display: none;
   }
 
   .card-drawer[open] {
@@ -1433,13 +1452,12 @@ blockquote {
   }
 
   .section-heading span {
-    grid-column: 1;
-    grid-row: 2;
+    grid-column: 2;
+    grid-row: 1;
     width: fit-content;
   }
 
   .shelf-toggle {
-    grid-column: 2;
-    grid-row: 1 / span 2;
+    display: none;
   }
 }
