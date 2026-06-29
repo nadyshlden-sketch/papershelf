@@ -8,20 +8,20 @@
   min-width: 0;
   overflow-x: hidden;
   overflow-y: auto;
-  padding-right: 12px;
-  scrollbar-gutter: stable;
+  padding-right: 0;
+  scrollbar-gutter: auto;
 }
 
 .source-item,
 .tool-panel {
   justify-self: start;
-  width: calc(100% - 12px);
+  width: 100%;
   max-width: 100%;
   min-width: 0;
 }
 
 .shelf-tools {
-  width: calc(100% - 32px);
+  width: 100%;
   max-width: 100%;
   min-width: 0;
 }
@@ -98,16 +98,16 @@ blockquote {
   .source-list {
     overflow-x: hidden;
     overflow-y: auto;
-    padding-right: 8px;
+    padding-right: 0;
   }
 
   .source-item,
   .tool-panel {
-    width: calc(100% - 10px);
+    width: 100%;
   }
 
   .shelf-tools {
-    width: calc(100% - 26px);
+    width: 100%;
   }
 
   .board {
