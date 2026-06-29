@@ -242,7 +242,7 @@ label {
   gap: 16px;
   min-height: 0;
   overflow: hidden;
-  padding: 20px 10px 16px 14px;
+  padding: 20px 3px 16px 14px;
   border-right: 1px solid var(--cobalt);
   background:
     radial-gradient(rgba(22, 27, 42, 0.08) 0.55px, transparent 0.55px) 0 0 / 6px 6px,
@@ -466,7 +466,7 @@ label {
 
 .source-item:hover {
   box-shadow: var(--print-offset-strong);
-  transform: translate(-2px, -2px);
+  transform: translateY(-2px);
 }
 
 .source-title {
@@ -1230,7 +1230,7 @@ blockquote {
   }
 
   .source-shelf {
-    padding: 18px 14px;
+    padding: 18px 4px 18px 14px;
   }
 
   .source-shelf {
