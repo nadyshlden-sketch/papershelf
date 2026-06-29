@@ -1,0 +1,48 @@
+.app-shell {
+  grid-template-columns: minmax(320px, 380px) minmax(0, 1fr);
+}
+
+.source-list {
+  grid-template-columns: minmax(0, 1fr);
+  width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-right: 12px;
+}
+
+.source-item {
+  justify-self: start;
+  width: calc(100% - 12px);
+  max-width: 100%;
+}
+
+.source-title-text strong,
+.source-title-text span {
+  max-width: 100%;
+  white-space: normal;
+}
+
+@media (max-width: 1080px) {
+  .source-shelf {
+    height: min(760px, calc(100vh - 64px));
+    max-height: min(760px, calc(100vh - 64px));
+  }
+}
+
+@media (max-width: 767px) {
+  .source-shelf {
+    height: calc(100vh - 115px);
+    max-height: calc(100vh - 115px);
+  }
+
+  .source-list {
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-right: 8px;
+  }
+
+  .source-item {
+    width: calc(100% - 10px);
+  }
+}
