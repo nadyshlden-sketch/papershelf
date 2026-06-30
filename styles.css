@@ -1249,13 +1249,15 @@ blockquote {
   }
 
   .source-shelf {
-    padding: 18px 4px 18px 14px;
+    padding: 14px 10px 14px 14px;
   }
 
   .source-shelf {
-    height: min(320px, calc(100vh - 115px));
-    max-height: min(320px, calc(100vh - 115px));
-    gap: 10px;
+    height: min(278px, calc(100svh - 115px));
+    max-height: min(278px, calc(100svh - 115px));
+    gap: 8px;
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 
   .section-heading-text {
@@ -1315,9 +1317,13 @@ blockquote {
 
   .shelf-tools {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
+    gap: 6px;
     margin: 0;
     padding: 0;
+  }
+
+  .source-shelf:has(.tool-panel[open]) .source-list {
+    display: none;
   }
 
   .tool-panel[open] {
@@ -1325,18 +1331,60 @@ blockquote {
   }
 
   .tool-panel:not([open]) {
-    min-height: 36px;
+    min-height: 34px;
   }
 
   .export-button,
   .tool-panel summary {
-    min-height: 36px;
+    min-height: 34px;
     padding: 0 12px;
-    font-size: 0.68rem;
+    font-size: 0.64rem;
+  }
+
+  .tool-panel[open] .panel-form {
+    margin-top: 6px;
   }
 
   .panel-form {
-    padding: 14px;
+    gap: 6px 8px;
+    padding: 8px 10px 10px;
+  }
+
+  .panel-form label {
+    gap: 3px;
+    font-size: 0.58rem;
+    line-height: 1.1;
+  }
+
+  .panel-form input,
+  .panel-form select,
+  .panel-form textarea {
+    padding: 4px 2px 5px;
+    font-size: 0.78rem;
+    line-height: 1.2;
+  }
+
+  .panel-form button {
+    min-height: 32px;
+    font-size: 0.62rem;
+  }
+
+  #sourceForm,
+  #quoteForm {
+    grid-template-columns: minmax(0, 1fr) minmax(74px, 0.34fr);
+  }
+
+  #sourceForm label:nth-child(3),
+  #sourceForm button,
+  #quoteForm label:nth-child(3),
+  #quoteForm button {
+    grid-column: 1 / -1;
+  }
+
+  #quoteText {
+    height: 44px;
+    min-height: 44px;
+    resize: none;
   }
 
   .workspace {

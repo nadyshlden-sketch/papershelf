@@ -96,8 +96,10 @@ blockquote {
 
 @media (max-width: 767px) {
   .source-shelf {
-    height: min(320px, calc(100vh - 115px));
-    max-height: min(320px, calc(100vh - 115px));
+    height: min(278px, calc(100svh - 115px));
+    max-height: min(278px, calc(100svh - 115px));
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 
   .source-list {
