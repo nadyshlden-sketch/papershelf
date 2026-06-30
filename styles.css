@@ -1332,19 +1332,19 @@ blockquote {
 
   .quote-list {
     gap: 6px;
-    max-height: 94px;
-    overflow-y: auto;
+    max-height: none;
+    overflow: visible;
     padding: 7px 8px 8px;
   }
 
   .quote-line {
-    display: -webkit-box;
-    overflow: hidden;
+    display: block;
+    overflow: visible;
     font-size: 0.76rem;
     line-height: 1.35;
+    overflow-wrap: anywhere;
     padding: 6px 7px;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
+    word-break: break-word;
   }
 
   .quote-list .empty-state {
